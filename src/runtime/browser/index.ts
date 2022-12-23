@@ -58,8 +58,16 @@ export function getErrorTrace(error: Error): IStackFrame[] {
     }, []) as IStackFrame[];
 }
 
+function isServiceWorkerEnvironment() {
+  return self.constructor.name === "ServiceWorkerGlobalScope";
+}
+
+function getLocation() {
+  return isServiceWorkerEnvironment() ? location.origin : window.location.origin;
+}
+
 function stackLineToStackFrame(line?: string): IStackFrame {
-  const href = window.location.origin;
+  const href = getLocation();
   const pathResult: IStackFrame = {
     fullFilePath: undefined,
     fileName: undefined,
